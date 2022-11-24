@@ -2,7 +2,7 @@
   "name": "sevidor",
   "version": "1.0.0",
   "engines": {
-    "node": "16.15.1"
+    "node": "19.1.0"
   },
   "description": "",
   "main": "index.js",

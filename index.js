@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-const bodyParser = require("body-Parser");
 const dbMedico = require("./config/dbMedico");
 const dbPaciente = require("./config/dbPaciente");
 const dbConsultas = require("./config/dbConsultas");

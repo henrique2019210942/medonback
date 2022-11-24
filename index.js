@@ -57,7 +57,7 @@ app.put("/consultasMarcadas", (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 3003, function () {
+app.listen(process.env.PORT , function () {
   console.log(
     "Express server listening on port %d in %s mode",
     this.address().port,
@@ -131,7 +131,7 @@ app.post("/loginPaciente", (req, res) => {
   );
 });
 
-app.listen(process.env.PORT || 3001, function () {
+app.listen(process.env.PORT , function () {
   console.log(
     "Express server listening on port %d in %s mode",
     this.address().port,
@@ -206,7 +206,7 @@ app.post("/loginMedico", (req, res) => {
   );
 });
 
-app.listen(process.env.PORT || 3002, function () {
+app.listen(process.env.PORT , function () {
   console.log(
     "Express server listening on port %d in %s mode",
     this.address().port,

@@ -1,15 +1,69 @@
 const express = require("express");
 const app = express();
-const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const bodyParser = require("body-Parser");
 const dbMedico = require("./config/dbMedico");
 const dbPaciente = require("./config/dbPaciente");
-
-const PORTM = 3001;
-const PORTP = 3002;
+const dbConsultas = require("./config/dbConsultas");
 
 const saltRounds = 10;
+/********************************************* Marca Consulta *************************************************************** */
+
+app.use(express.json());
+app.use(cors());
+
+app.post("/cadastrarConsulta", (req, res) => {
+  const tipo = req.body.tipo;
+  const endereco = req.body.endereco;
+  const data = req.body.data;
+  const hora = req.body.hora;
+
+  const sqlInsert =
+    "INSERT INTO consultas (tipo,endereco,data,hora)VALUES (?,?,?,?)";
+
+  dbConsultas.query(sqlInsert, [tipo, endereco, data, hora], (err, result) => {
+    console.log(err);
+  });
+});
+
+app.get("/cadastrarConsulta", (req, res) => {
+  const sqlSelect = "SELECT * FROM consultas";
+
+  dbConsultas.query(sqlSelect, (err, result) => {
+    res.send(result);
+  });
+});
+app.delete("/cadastrarConsulta:data", (req, res) => {
+  const consulta = req.params.data;
+
+  const sqlDelete = "DELETE FROM consultas WHERE data = ?";
+
+  dbConsultas.query(sqlDelete, consulta, (err, result) => {
+    console.log(result);
+  });
+});
+
+app.put("/consultasMarcadas", (req, res) => {
+  const data = req.body.data;
+  const hora = req.body.hora;
+  const tipo = req.body.tipo;
+  const endereco = req.body.endereco;
+
+  const sqlUpdate = "UPDATE consultas SET hora = ? WHERE data= ?";
+
+  dbConsultas.query(sqlUpdate, [tipo, endereco, hora, data], (err, result) => {
+    console.log(result);
+  });
+});
+
+app.listen(process.env.PORT || 3003, function () {
+  console.log(
+    "Express server listening on port %d in %s mode",
+    this.address().port,
+    app.settings.env
+  );
+});
 
 /********************************************* Paceinte *************************************************************** */
 
@@ -21,7 +75,7 @@ app.post("/CadastroPaciente", (req, res) => {
   const password = req.body.password;
 
   dbPaciente.query(
-    "SELECT * FROM pacientes WHERE email = ?",
+    "SELECT * FROM paciente WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
@@ -30,7 +84,7 @@ app.post("/CadastroPaciente", (req, res) => {
       if (result.length == 0) {
         bcrypt.hash(password, saltRounds, (err, hash) => {
           dbPaciente.query(
-            "INSERT INTO pacientes (email, password) VALUE (?,?)",
+            "INSERT INTO paciente (email, password) VALUE (?,?)",
             [email, hash],
             (error, response) => {
               if (err) {
@@ -53,7 +107,7 @@ app.post("/loginPaciente", (req, res) => {
   const password = req.body.password;
 
   dbPaciente.query(
-    "SELECT * FROM pacientes WHERE email = ?",
+    "SELECT * FROM paciente WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
@@ -77,8 +131,12 @@ app.post("/loginPaciente", (req, res) => {
   );
 });
 
-app.listen(process.env.PORTP || PORTP, () => {
-  console.log(`Servidor Rodando na porta ${PORTP}`);
+app.listen(process.env.PORT || 3001, function () {
+  console.log(
+    "Express server listening on port %d in %s mode",
+    this.address().port,
+    app.settings.env
+  );
 });
 /*******************************************Paceiente***************************************************************** */
 
@@ -92,7 +150,7 @@ app.post("/CadastroMedico", (req, res) => {
   const password = req.body.password;
 
   dbMedico.query(
-    "SELECT * FROM medicos WHERE email = ?",
+    "SELECT * FROM medico WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
@@ -101,7 +159,7 @@ app.post("/CadastroMedico", (req, res) => {
       if (result.length == 0) {
         bcrypt.hash(password, saltRounds, (err, hash) => {
           dbMedico.query(
-            "INSERT INTO medicos (email, password) VALUE (?,?)",
+            "INSERT INTO medico (email, password) VALUE (?,?)",
             [email, hash],
             (error, response) => {
               if (err) {
@@ -124,7 +182,7 @@ app.post("/loginMedico", (req, res) => {
   const password = req.body.password;
 
   dbMedico.query(
-    "SELECT * FROM medicos WHERE email = ?",
+    "SELECT * FROM medico WHERE email = ?",
     [email],
     (err, result) => {
       if (err) {
@@ -148,8 +206,12 @@ app.post("/loginMedico", (req, res) => {
   );
 });
 
-app.listen(process.env.PORTM || PORTM, () => {
-  console.log(`Servidor Rodando na porta ${PORTM}`);
+app.listen(process.env.PORT || 3002, function () {
+  console.log(
+    "Express server listening on port %d in %s mode",
+    this.address().port,
+    app.settings.env
+  );
 });
 
 /*******************************************Medico***************************************************************** */

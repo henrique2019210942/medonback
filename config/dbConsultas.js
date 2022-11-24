@@ -1,10 +1,10 @@
 const mysql = require("mysql2");
 
-const dbMedico = mysql.createPool({
+const dbConsultas = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "root",
   database: "medon",
 });
 
-module.exports = dbMedico;
+module.exports = dbConsultas;

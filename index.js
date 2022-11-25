@@ -33,15 +33,6 @@ app.get("/cadastrarConsulta", (req, res) => {
     res.send(result);
   });
 });
-app.delete("/cadastrarConsulta:data", (req, res) => {
-  const consulta = req.params.data;
-
-  const sqlDelete = "DELETE FROM consultas WHERE data = ?";
-
-  dbConsultas.query(sqlDelete, consulta, (err, result) => {
-    console.log(result);
-  });
-});
 
 app.put("/consultasMarcadas", (req, res) => {
   const data = req.body.data;
@@ -53,6 +44,16 @@ app.put("/consultasMarcadas", (req, res) => {
 
   dbConsultas.query(sqlUpdate, [tipo, endereco, hora, data], (err, result) => {
     console.log(result);
+  });
+});
+
+app.delete("/cadastrarConsulta/:data", (req, res) => {
+  const consulta = req.params.data;
+
+  const sqlDelete = "DELETE FROM consultas WHERE data = ?";
+
+  dbConsultas.query(sqlDelete, consulta, (err, result) => {
+    if (err) console.log(err);
   });
 });
 
